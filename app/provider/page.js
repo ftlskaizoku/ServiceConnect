@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowRight, TrendingUp } from 'lucide-react';
 import AppShell from '@/components/AppShell';
 import { Toast, useToast } from '@/components/Toast';
+import InstallPrompt from '@/components/InstallPrompt';
 
 function useCount(target, dur=1400) {
   const [v,setV]=useState(0);
@@ -70,6 +71,7 @@ export default function ProviderDashboard() {
         })}
       </div>
       <Toast toast={toast}/>
+      <InstallPrompt />
     </AppShell>
   );
 }

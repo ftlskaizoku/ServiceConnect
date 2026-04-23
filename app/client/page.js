@@ -6,6 +6,7 @@ import AppShell from '@/components/AppShell';
 import ProviderCard from '@/components/ProviderCard';
 import ProviderModal from '@/components/ProviderModal';
 import { Toast, useToast } from '@/components/Toast';
+import InstallPrompt from '@/components/InstallPrompt';
 import { PROVIDERS, SERVICES } from '@/lib/data';
 
 export default function ClientHome() {
@@ -64,6 +65,7 @@ export default function ClientHome() {
 
       <ProviderModal provider={sel} onClose={()=>setSel(null)} onContact={p=>showToast(`Demande envoyée à ${p.name}`)}/>
       <Toast toast={toast}/>
+      <InstallPrompt />
     </AppShell>
   );
 }

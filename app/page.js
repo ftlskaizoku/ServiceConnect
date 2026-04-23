@@ -1,17 +1,16 @@
 'use client';
 import Link from 'next/link';
 import { Zap, ArrowRight, Star, Shield, Smartphone } from 'lucide-react';
+import InstallPrompt from '@/components/InstallPrompt';
 
 export default function Home() {
   return (
     <div style={{ minHeight:'100vh', background:'#0D1117', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', position:'relative', overflow:'hidden', padding:'24px' }}>
-      {/* Grid texture */}
       <div style={{ position:'absolute', inset:0, opacity:.15, backgroundImage:'radial-gradient(circle at 1px 1px, rgba(255,255,255,.15) 1px, transparent 0)', backgroundSize:'28px 28px' }} />
       <div style={{ position:'absolute', top:'-20%', left:'-10%', width:500, height:500, borderRadius:'50%', opacity:.07, background:'radial-gradient(circle, #F59E0B, transparent 70%)' }} />
       <div style={{ position:'absolute', bottom:'-15%', right:'-5%', width:400, height:400, borderRadius:'50%', opacity:.06, background:'radial-gradient(circle, #10B981, transparent 70%)' }} />
 
       <div style={{ position:'relative', zIndex:1, width:'100%', maxWidth:420, textAlign:'center' }} className="au">
-        {/* Logo */}
         <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:12, marginBottom:28 }}>
           <div style={{ width:44, height:44, borderRadius:14, background:'#F59E0B', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
             <Zap size={22} strokeWidth={2.5} style={{ color:'#0D1117' }} />
@@ -27,14 +26,13 @@ export default function Home() {
           Trouvez des professionnels vérifiés au Sénégal. Comparez, contactez et payez en toute sécurité via Mobile Money.
         </p>
 
-        {/* Role cards */}
         <div style={{ display:'flex', flexDirection:'column', gap:12, marginBottom:36 }}>
           {[
-            { href:'/client', emoji:'🔍', title:'Je cherche un service', desc:'Trouvez et contactez des pros vérifiés', color:'rgba(245,158,11,' },
-            { href:'/provider', emoji:'🛠️', title:'Je propose mes services', desc:'Développez votre activité en ligne', color:'rgba(16,185,129,' },
+            { href:'/client', emoji:'🔍', title:'Je cherche un service', desc:'Trouvez et contactez des pros vérifiés', hoverBg:'rgba(245,158,11,.1)', hoverBorder:'rgba(245,158,11,.3)' },
+            { href:'/provider', emoji:'🛠️', title:'Je propose mes services', desc:'Développez votre activité en ligne', hoverBg:'rgba(16,185,129,.1)', hoverBorder:'rgba(16,185,129,.3)' },
           ].map(item => (
             <Link key={item.href} href={item.href} style={{ display:'flex', alignItems:'center', gap:14, padding:'16px 18px', borderRadius:16, border:'1px solid rgba(255,255,255,.1)', background:'rgba(255,255,255,.05)', textDecoration:'none', transition:'all .2s' }}
-              onMouseEnter={e=>{e.currentTarget.style.background=`${item.color}.1)`;e.currentTarget.style.borderColor=`${item.color}.3)`;}}
+              onMouseEnter={e=>{e.currentTarget.style.background=item.hoverBg;e.currentTarget.style.borderColor=item.hoverBorder;}}
               onMouseLeave={e=>{e.currentTarget.style.background='rgba(255,255,255,.05)';e.currentTarget.style.borderColor='rgba(255,255,255,.1)';}}>
               <div style={{ width:48, height:48, borderRadius:14, background:'rgba(255,255,255,.07)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.5rem', flexShrink:0 }}>{item.emoji}</div>
               <div style={{ flex:1, textAlign:'left' }}>
@@ -47,7 +45,7 @@ export default function Home() {
         </div>
 
         {/* Stats */}
-        <div style={{ display:'flex', justifyContent:'center', gap:28 }}>
+        <div style={{ display:'flex', justifyContent:'center', gap:28, marginBottom:20 }}>
           {[[Star,'4.8','Note moy.'],[Shield,'1 200+','Prestataires'],[Smartphone,'8 500+','Missions']].map(([Icon,v,l]) => (
             <div key={l} style={{ textAlign:'center' }}>
               <Icon size={14} strokeWidth={1.8} style={{ color:'rgba(255,255,255,.3)', display:'block', margin:'0 auto 4px' }} />
@@ -56,7 +54,16 @@ export default function Home() {
             </div>
           ))}
         </div>
+
+        {/* Install hint */}
+        <div style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'6px 14px', borderRadius:99, background:'rgba(245,158,11,.1)', border:'1px solid rgba(245,158,11,.2)' }}>
+          <Smartphone size={13} strokeWidth={2} style={{ color:'#F59E0B' }} />
+          <span style={{ fontSize:'.74rem', color:'rgba(255,255,255,.5)' }}>Disponible sur <strong style={{ color:'#F59E0B' }}>Android & iOS</strong></span>
+        </div>
       </div>
+
+      {/* PWA Install prompt */}
+      <InstallPrompt />
     </div>
   );
 }
