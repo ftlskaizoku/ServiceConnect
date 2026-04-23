@@ -4,65 +4,59 @@ import { Zap, ArrowRight, Star, Shield, Smartphone } from 'lucide-react';
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden" style={{ background: 'var(--ink)' }}>
-      <div className="absolute inset-0 opacity-20" style={{
-        backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,.12) 1px, transparent 0)',
-        backgroundSize: '32px 32px'
-      }} />
-      <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full opacity-10"
-        style={{ background: 'radial-gradient(circle, var(--amber), transparent 70%)', transform: 'translate(-30%,-30%)' }} />
-      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full opacity-8"
-        style={{ background: 'radial-gradient(circle, var(--emerald), transparent 70%)', transform: 'translate(20%,20%)' }} />
+    <div style={{ minHeight:'100vh', background:'#0D1117', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', position:'relative', overflow:'hidden', padding:'24px' }}>
+      {/* Grid texture */}
+      <div style={{ position:'absolute', inset:0, opacity:.15, backgroundImage:'radial-gradient(circle at 1px 1px, rgba(255,255,255,.15) 1px, transparent 0)', backgroundSize:'28px 28px' }} />
+      <div style={{ position:'absolute', top:'-20%', left:'-10%', width:500, height:500, borderRadius:'50%', opacity:.07, background:'radial-gradient(circle, #F59E0B, transparent 70%)' }} />
+      <div style={{ position:'absolute', bottom:'-15%', right:'-5%', width:400, height:400, borderRadius:'50%', opacity:.06, background:'radial-gradient(circle, #10B981, transparent 70%)' }} />
 
-      <div className="relative z-10 text-center px-6 py-12 max-w-md w-full animate-slide-up">
-        <div className="flex items-center justify-center gap-2.5 mb-8">
-          <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: 'var(--amber)' }}>
-            <Zap size={20} strokeWidth={2.5} style={{ color: 'var(--ink)' }} />
+      <div style={{ position:'relative', zIndex:1, width:'100%', maxWidth:420, textAlign:'center' }} className="au">
+        {/* Logo */}
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:12, marginBottom:28 }}>
+          <div style={{ width:44, height:44, borderRadius:14, background:'#F59E0B', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+            <Zap size={22} strokeWidth={2.5} style={{ color:'#0D1117' }} />
           </div>
-          <span className="text-white text-xl" style={{ fontFamily: 'DM Serif Display, serif' }}>ServiceConnect</span>
+          <span style={{ fontFamily:'"DM Serif Display",Georgia,serif', fontSize:'1.4rem', color:'white' }}>ServiceConnect</span>
         </div>
 
-        <h1 className="text-white leading-tight mb-4" style={{ fontFamily: 'DM Serif Display, serif', fontSize: 'clamp(2rem, 6vw, 3rem)' }}>
+        <h1 style={{ fontFamily:'"DM Serif Display",Georgia,serif', fontSize:'clamp(1.8rem,5vw,2.6rem)', fontWeight:400, color:'white', lineHeight:1.2, marginBottom:14 }}>
           Le bon prestataire,{' '}
-          <em className="not-italic" style={{ color: 'var(--amber)' }}>près de vous.</em>
+          <em style={{ fontStyle:'italic', color:'#F59E0B' }}>près de vous.</em>
         </h1>
-        <p className="mb-10 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,.55)' }}>
+        <p style={{ fontSize:'.9rem', color:'rgba(255,255,255,.5)', lineHeight:1.7, marginBottom:36 }}>
           Trouvez des professionnels vérifiés au Sénégal. Comparez, contactez et payez en toute sécurité via Mobile Money.
         </p>
 
-        <div className="grid grid-cols-1 gap-3 mb-8">
-          <RoleCard href="/client" emoji="🔍" title="Je cherche un service" desc="Trouvez et contactez des pros vérifiés" accentColor="rgba(245,158,11,.1)" accentBorder="rgba(245,158,11,.3)" />
-          <RoleCard href="/provider" emoji="🛠️" title="Je propose mes services" desc="Développez votre activité en ligne" accentColor="rgba(16,185,129,.1)" accentBorder="rgba(16,185,129,.3)" />
+        {/* Role cards */}
+        <div style={{ display:'flex', flexDirection:'column', gap:12, marginBottom:36 }}>
+          {[
+            { href:'/client', emoji:'🔍', title:'Je cherche un service', desc:'Trouvez et contactez des pros vérifiés', color:'rgba(245,158,11,' },
+            { href:'/provider', emoji:'🛠️', title:'Je propose mes services', desc:'Développez votre activité en ligne', color:'rgba(16,185,129,' },
+          ].map(item => (
+            <Link key={item.href} href={item.href} style={{ display:'flex', alignItems:'center', gap:14, padding:'16px 18px', borderRadius:16, border:'1px solid rgba(255,255,255,.1)', background:'rgba(255,255,255,.05)', textDecoration:'none', transition:'all .2s' }}
+              onMouseEnter={e=>{e.currentTarget.style.background=`${item.color}.1)`;e.currentTarget.style.borderColor=`${item.color}.3)`;}}
+              onMouseLeave={e=>{e.currentTarget.style.background='rgba(255,255,255,.05)';e.currentTarget.style.borderColor='rgba(255,255,255,.1)';}}>
+              <div style={{ width:48, height:48, borderRadius:14, background:'rgba(255,255,255,.07)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.5rem', flexShrink:0 }}>{item.emoji}</div>
+              <div style={{ flex:1, textAlign:'left' }}>
+                <div style={{ fontFamily:'"DM Serif Display",Georgia,serif', fontSize:'1rem', color:'white', marginBottom:3 }}>{item.title}</div>
+                <div style={{ fontSize:'.8rem', color:'rgba(255,255,255,.4)' }}>{item.desc}</div>
+              </div>
+              <ArrowRight size={16} strokeWidth={2} style={{ color:'rgba(255,255,255,.3)', flexShrink:0 }} />
+            </Link>
+          ))}
         </div>
 
-        <div className="flex justify-center gap-6">
+        {/* Stats */}
+        <div style={{ display:'flex', justifyContent:'center', gap:28 }}>
           {[[Star,'4.8','Note moy.'],[Shield,'1 200+','Prestataires'],[Smartphone,'8 500+','Missions']].map(([Icon,v,l]) => (
-            <div key={l} className="text-center">
-              <Icon size={14} strokeWidth={1.8} className="mx-auto mb-1" style={{ color: 'rgba(255,255,255,.3)' }} />
-              <div className="text-white font-semibold text-sm" style={{ fontFamily: 'DM Serif Display, serif' }}>{v}</div>
-              <div className="text-xs" style={{ color: 'rgba(255,255,255,.3)' }}>{l}</div>
+            <div key={l} style={{ textAlign:'center' }}>
+              <Icon size={14} strokeWidth={1.8} style={{ color:'rgba(255,255,255,.3)', display:'block', margin:'0 auto 4px' }} />
+              <div style={{ fontFamily:'"DM Serif Display",Georgia,serif', fontSize:'1rem', color:'white' }}>{v}</div>
+              <div style={{ fontSize:'.72rem', color:'rgba(255,255,255,.3)' }}>{l}</div>
             </div>
           ))}
         </div>
       </div>
     </div>
-  );
-}
-
-function RoleCard({ href, emoji, title, desc, accentColor, accentBorder }) {
-  return (
-    <Link href={href}
-      className="group flex items-center gap-4 p-4 rounded-2xl border transition-all duration-200 no-underline"
-      style={{ background: 'rgba(255,255,255,.05)', borderColor: 'rgba(255,255,255,.1)' }}
-      onMouseEnter={e => { e.currentTarget.style.background=accentColor; e.currentTarget.style.borderColor=accentBorder; }}
-      onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,.05)'; e.currentTarget.style.borderColor='rgba(255,255,255,.1)'; }}>
-      <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl"
-        style={{ background: 'rgba(255,255,255,.06)' }}>{emoji}</div>
-      <div className="flex-1 text-left">
-        <div className="text-white font-semibold text-sm" style={{ fontFamily: 'DM Serif Display, serif' }}>{title}</div>
-        <div className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,.4)' }}>{desc}</div>
-      </div>
-      <ArrowRight size={16} strokeWidth={2} style={{ color: 'rgba(255,255,255,.3)' }} />
-    </Link>
   );
 }

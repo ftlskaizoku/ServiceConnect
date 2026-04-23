@@ -4,96 +4,48 @@ import { MessageCircle, Check, X, Star, Plus } from 'lucide-react';
 import AppShell from '@/components/AppShell';
 import { Toast, useToast } from '@/components/Toast';
 import { CLIENT_REQUESTS } from '@/lib/data';
-
-const ST = {
-  active:  { label:'En cours',   color:'var(--emerald)', bg:'var(--emerald-dim)', pulse:true },
-  pending: { label:'En attente', color:'var(--amber)',   bg:'var(--amber-dim)',   pulse:false },
-  done:    { label:'Terminée',   color:'var(--ink-faint)', bg:'var(--surface-3)', pulse:false },
-};
-
+const ST = { active:{label:'En cours',c:'#10B981',bg:'#D1FAE5',pulse:true}, pending:{label:'En attente',c:'#D97706',bg:'#FEF3C7',pulse:false}, done:{label:'Terminée',c:'#8496B0',bg:'#F4F6FA',pulse:false} };
 export default function RequestsPage() {
-  const [tab, setTab] = useState('all');
-  const { toast, showToast } = useToast();
-  const counts = { pending: CLIENT_REQUESTS.filter(r=>r.status==='pending').length, active: CLIENT_REQUESTS.filter(r=>r.status==='active').length, done: CLIENT_REQUESTS.filter(r=>r.status==='done').length };
-  const tabs = [
-    { id:'all',     label:`Toutes (${CLIENT_REQUESTS.length})` },
-    { id:'pending', label:`En attente (${counts.pending})` },
-    { id:'active',  label:`En cours (${counts.active})` },
-    { id:'done',    label:`Terminées (${counts.done})` },
-  ];
-  const filtered = tab === 'all' ? CLIENT_REQUESTS : CLIENT_REQUESTS.filter(r => r.status === tab);
-
+  const [tab,setTab]=useState('all');
+  const {toast,showToast}=useToast();
+  const counts={pending:CLIENT_REQUESTS.filter(r=>r.status==='pending').length,active:CLIENT_REQUESTS.filter(r=>r.status==='active').length,done:CLIENT_REQUESTS.filter(r=>r.status==='done').length};
+  const tabs=[{id:'all',l:`Toutes (${CLIENT_REQUESTS.length})`},{id:'pending',l:`En attente (${counts.pending})`},{id:'active',l:`En cours (${counts.active})`},{id:'done',l:`Terminées (${counts.done})`}];
+  const filtered=tab==='all'?CLIENT_REQUESTS:CLIENT_REQUESTS.filter(r=>r.status===tab);
   return (
     <AppShell role="client" title="Mes demandes" subtitle="Suivez vos demandes en temps réel">
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex gap-2 flex-wrap">
-          {tabs.map(t => (
-            <button key={t.id} onClick={() => setTab(t.id)}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium border transition-all"
-              style={{ background: tab===t.id?'var(--ink)':'var(--surface)', color: tab===t.id?'white':'var(--ink-muted)', borderColor: tab===t.id?'var(--ink)':'var(--border)' }}>
-              {t.label}
-            </button>
-          ))}
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16, flexWrap:'wrap', gap:10 }}>
+        <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
+          {tabs.map(t=><button key={t.id} onClick={()=>setTab(t.id)} style={{ padding:'6px 12px', borderRadius:8, fontSize:'.78rem', fontWeight:500, border:`1.5px solid ${tab===t.id?'#0D1117':'var(--border)'}`, background:tab===t.id?'#0D1117':'white', color:tab===t.id?'white':'var(--ink-muted)', cursor:'pointer', fontFamily:'inherit' }}>{t.l}</button>)}
         </div>
-        <button onClick={() => showToast('Nouvelle demande créée')}
-          className="btn-primary px-3 py-2 text-xs flex items-center gap-1.5 hidden sm:flex">
-          <Plus size={13} strokeWidth={2.5} /> Nouvelle
-        </button>
+        <button onClick={()=>showToast('Nouvelle demande créée')} className="btn btn-p" style={{ padding:'8px 14px', fontSize:'.78rem' }}><Plus size={13} strokeWidth={2.5}/>Nouvelle</button>
       </div>
-
-      <div className="flex flex-col gap-3">
-        {filtered.map(req => {
-          const st = ST[req.status];
+      <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+        {filtered.map(req=>{
+          const st=ST[req.status];
           return (
-            <div key={req.id} className="card p-4 flex gap-3 items-start" style={{ opacity: req.status==='done' ? .8 : 1 }}>
-              <span className={`mt-1 w-2.5 h-2.5 rounded-full flex-shrink-0 ${st.pulse?'animate-pulse':''}`} style={{ background:st.color }} />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2 mb-1">
-                  <h4 className="font-semibold text-sm leading-snug" style={{ color:'var(--ink)' }}>{req.title}</h4>
-                  <span className="badge flex-shrink-0" style={{ background:st.bg, color:st.color }}>{st.label}</span>
+            <div key={req.id} className="card" style={{ padding:16, display:'flex', gap:12, alignItems:'flex-start', borderLeft:`4px solid ${st.c}`, opacity:req.status==='done'?.8:1 }}>
+              <span style={{ width:10, height:10, borderRadius:'50%', background:st.c, flexShrink:0, marginTop:4, animation:st.pulse?'pulse-dot 2s infinite':'none' }}/>
+              <div style={{ flex:1, minWidth:0 }}>
+                <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:8, marginBottom:4 }}>
+                  <h4 style={{ fontWeight:600, fontSize:'.86rem', color:'var(--ink)', flex:1 }}>{req.title}</h4>
+                  <span style={{ padding:'2px 8px', borderRadius:99, fontSize:'.68rem', fontWeight:600, background:st.bg, color:st.c, flexShrink:0 }}>{st.label}</span>
                 </div>
-                {req.provider
-                  ? <p className="text-xs mb-0.5" style={{ color:'var(--ink-muted)' }}>{req.provider} {req.job && `· ${req.job}`}</p>
-                  : <p className="text-xs mb-0.5" style={{ color:'var(--ink-muted)' }}>2 prestataires contactés</p>
-                }
-                <p className="text-xs mb-3" style={{ color:'var(--ink-faint)' }}>📍 {req.location} · {req.date}</p>
-                <div className="flex gap-2 flex-wrap">
-                  {req.status==='pending' && req.provider && <>
-                    <button onClick={() => showToast('Devis accepté')} className="btn-primary px-3 py-1.5 text-xs flex items-center gap-1.5">
-                      <Check size={12} strokeWidth={2.5} /> Accepter
-                    </button>
-                    <button onClick={() => showToast('Devis refusé')} className="btn-secondary px-3 py-1.5 text-xs flex items-center gap-1.5">
-                      <X size={12} strokeWidth={2} /> Refuser
-                    </button>
-                  </>}
-                  {req.status==='active' && (
-                    <button onClick={() => showToast(`Chat ouvert avec ${req.provider}`)}
-                      className="btn-secondary px-3 py-1.5 text-xs flex items-center gap-1.5">
-                      <MessageCircle size={12} strokeWidth={1.8} /> Chat
-                    </button>
-                  )}
-                  {req.status==='done' && (
-                    <button onClick={() => showToast('Avis publié')}
-                      className="px-3 py-1.5 text-xs font-medium rounded-lg flex items-center gap-1.5 border transition-all"
-                      style={{ background:'var(--amber-dim)', borderColor:'var(--amber)', color:'var(--amber-dark)' }}>
-                      <Star size={12} strokeWidth={2} fill="var(--amber)" /> Laisser un avis
-                    </button>
-                  )}
+                <p style={{ fontSize:'.76rem', color:'var(--ink-muted)', marginBottom:2 }}>{req.provider?`${req.provider}${req.job?` · ${req.job}`:''}`:2+' prestataires contactés'}</p>
+                <p style={{ fontSize:'.72rem', color:'var(--ink-faint)', marginBottom:10 }}>📍 {req.location} · {req.date}</p>
+                <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+                  {req.status==='pending'&&req.provider&&<><button onClick={()=>showToast('Devis accepté')} className="btn btn-p" style={{ padding:'6px 12px', fontSize:'.76rem' }}><Check size={12} strokeWidth={2.5}/>Accepter</button><button onClick={()=>showToast('Devis refusé')} className="btn btn-s" style={{ padding:'6px 12px', fontSize:'.76rem' }}><X size={12} strokeWidth={2}/>Refuser</button></>}
+                  {req.status==='active'&&<button onClick={()=>showToast('Chat ouvert')} className="btn btn-s" style={{ padding:'6px 12px', fontSize:'.76rem' }}><MessageCircle size={12} strokeWidth={1.8}/>Chat</button>}
+                  {req.status==='done'&&<button onClick={()=>showToast('Avis publié')} style={{ padding:'6px 12px', borderRadius:8, border:'1.5px solid #F59E0B', background:'#FEF3C7', color:'#92400E', cursor:'pointer', fontSize:'.76rem', fontWeight:600, display:'flex', alignItems:'center', gap:5, fontFamily:'inherit' }}><Star size={11} strokeWidth={2} fill="#F59E0B"/>Avis</button>}
                 </div>
               </div>
-              <div className="text-right flex-shrink-0">
-                {req.price
-                  ? <div className="font-semibold text-sm" style={{ fontFamily:'DM Serif Display,serif', color: req.status==='active'?'var(--emerald)':req.status==='pending'?'var(--amber)':'var(--ink-faint)' }}>
-                      {req.price.toLocaleString('fr-FR')} F
-                    </div>
-                  : <div className="text-xs font-medium" style={{ color:'var(--amber)' }}>Devis attendu</div>
-                }
+              <div style={{ textAlign:'right', flexShrink:0 }}>
+                {req.price?<div style={{ fontFamily:'"DM Serif Display",Georgia,serif', fontSize:'.9rem', color:req.status==='active'?'#10B981':req.status==='pending'?'#D97706':'#8496B0' }}>{req.price.toLocaleString('fr-FR')} F</div>:<div style={{ fontSize:'.75rem', fontWeight:600, color:'#D97706' }}>Devis attendu</div>}
               </div>
             </div>
           );
         })}
       </div>
-      <Toast toast={toast} />
+      <Toast toast={toast}/>
     </AppShell>
   );
 }

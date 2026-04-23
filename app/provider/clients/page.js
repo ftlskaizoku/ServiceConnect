@@ -3,59 +3,46 @@ import { useState } from 'react';
 import { Search, MessageCircle } from 'lucide-react';
 import AppShell from '@/components/AppShell';
 import { Toast, useToast } from '@/components/Toast';
-
-const CLIENTS = [
-  { id:1, name:'Amadou Diallo', initials:'AD', color:'#0B3D91', missions:3, location:'Almadies', total:108000, status:'active', loyal:true },
-  { id:2, name:'Bineta Traoré', initials:'BT', color:'#C2185B', missions:1, location:'Ouakam', total:18000, status:'active' },
-  { id:3, name:'Aissatou Ndiaye', initials:'AN', color:'#1B5E20', missions:2, location:'Plateau', total:45000, status:'pending', loyal:true },
-  { id:4, name:'Moussa Ba', initials:'MB', color:'#00695C', missions:1, location:'Ouakam', total:80000, status:'done', rating:5 },
-  { id:5, name:'Ibrahima Sow', initials:'IS', color:'#0277BD', missions:1, location:'Grand Yoff', total:15000, status:'done', rating:4.5 },
-];
-
+const CLIENTS=[{id:1,name:'Amadou Diallo',initials:'AD',color:'#0B3D91',missions:3,location:'Almadies',total:108000,loyal:true},{id:2,name:'Bineta Traoré',initials:'BT',color:'#C2185B',missions:1,location:'Ouakam',total:18000},{id:3,name:'Aissatou Ndiaye',initials:'AN',color:'#1B5E20',missions:2,location:'Plateau',total:45000,loyal:true},{id:4,name:'Moussa Ba',initials:'MB',color:'#00695C',missions:1,location:'Ouakam',total:80000,rating:5},{id:5,name:'Ibrahima Sow',initials:'IS',color:'#0277BD',missions:1,location:'Grand Yoff',total:15000,rating:4.5}];
 export default function ClientsPage() {
-  const [search, setSearch] = useState('');
-  const { toast, showToast } = useToast();
-  const filtered = CLIENTS.filter(c => c.name.toLowerCase().includes(search.toLowerCase()));
-
+  const [search,setSearch]=useState('');
+  const {toast,showToast}=useToast();
+  const filtered=CLIENTS.filter(c=>c.name.toLowerCase().includes(search.toLowerCase()));
   return (
-    <AppShell role="provider" title="Mes clients" subtitle="Gérez votre base clients">
-      <div className="grid grid-cols-3 gap-3 mb-5">
-        {[['24','Clients total'],['11','Clients fidèles'],['4.8','Note moy.']].map(([v,l])=>(
-          <div key={l} className="card p-4 text-center">
-            <div className="text-xl font-bold mb-0.5" style={{ fontFamily:'DM Serif Display,serif', color:'var(--ink)' }}>{v}</div>
-            <div className="text-xs" style={{ color:'var(--ink-faint)' }}>{l}</div>
+    <AppShell role="provider" title="Mes clients" subtitle="Votre base clients">
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10, marginBottom:16 }}>
+        {[['24','Clients total'],['11','Fidèles'],['4.8★','Note']].map(([v,l])=>(
+          <div key={l} className="card" style={{ padding:14, textAlign:'center' }}>
+            <div style={{ fontFamily:'"DM Serif Display",Georgia,serif', fontSize:'1.2rem', color:'var(--ink)' }}>{v}</div>
+            <div style={{ fontSize:'.72rem', color:'var(--ink-faint)', marginTop:2 }}>{l}</div>
           </div>
         ))}
       </div>
-
-      <div className="flex items-center gap-2 bg-white border rounded-xl px-3 py-2.5 mb-4" style={{ borderColor:'var(--border)' }}>
-        <Search size={14} strokeWidth={1.8} style={{ color:'var(--ink-faint)' }} />
-        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher un client…"
-          className="flex-1 text-sm outline-none bg-transparent" style={{ fontFamily:'DM Sans,sans-serif' }} />
+      <div style={{ display:'flex', alignItems:'center', gap:10, background:'white', border:'1.5px solid var(--border)', borderRadius:11, padding:'9px 14px', marginBottom:12 }}>
+        <Search size={14} strokeWidth={1.8} style={{ color:'var(--ink-faint)', flexShrink:0 }}/>
+        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher un client…" className="inp" style={{ border:'none', outline:'none', padding:0, flex:1, fontSize:'.86rem' }}/>
       </div>
-
-      <div className="card overflow-hidden">
-        {filtered.map((c,i) => (
-          <div key={c.id} className={`flex items-center gap-3 px-4 py-3.5 ${i<filtered.length-1?'border-b':''}`}
-            style={{ borderColor:'var(--border)', opacity:c.status==='done'?.75:1 }}>
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-xs font-bold flex-shrink-0" style={{ background:c.color }}>{c.initials}</div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-sm" style={{ color:'var(--ink)' }}>{c.name}</span>
-                {c.loyal && <span className="badge badge-green">Fidèle</span>}
+      <div className="card" style={{ overflow:'hidden' }}>
+        {filtered.map((c,i)=>(
+          <div key={c.id} style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderBottom:i<filtered.length-1?'1px solid var(--border)':'none', opacity:c.rating&&c.missions<2?.75:1 }}>
+            <div style={{ width:38, height:38, borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', background:c.color, color:'white', fontSize:'.78rem', fontWeight:700, flexShrink:0 }}>{c.initials}</div>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+                <span style={{ fontWeight:600, fontSize:'.86rem', color:'var(--ink)' }}>{c.name}</span>
+                {c.loyal&&<span className="badge bg">Fidèle</span>}
               </div>
-              <p className="text-xs" style={{ color:'var(--ink-faint)' }}>{c.missions} mission{c.missions>1?'s':''} · {c.location}{c.rating?` · ★ ${c.rating}`:''}</p>
+              <p style={{ fontSize:'.72rem', color:'var(--ink-faint)' }}>{c.missions} mission{c.missions>1?'s':''} · {c.location}{c.rating?` · ★ ${c.rating}`:''}</p>
             </div>
-            <div className="text-right flex-shrink-0">
-              <div className="font-semibold text-sm" style={{ fontFamily:'DM Serif Display,serif', color:c.status==='done'?'var(--ink-faint)':'var(--ink)' }}>{c.total.toLocaleString('fr-FR')} F</div>
-              <button onClick={()=>showToast(`Chat ouvert avec ${c.name}`)} className="mt-1 flex items-center gap-1 text-xs font-medium ml-auto" style={{ color:'var(--ink-muted)' }}>
-                <MessageCircle size={12} strokeWidth={1.8} /> Chat
+            <div style={{ textAlign:'right', flexShrink:0 }}>
+              <div style={{ fontFamily:'"DM Serif Display",Georgia,serif', fontSize:'.88rem', color:'var(--ink)' }}>{c.total.toLocaleString('fr-FR')} F</div>
+              <button onClick={()=>showToast(`Chat ouvert avec ${c.name}`)} style={{ background:'none', border:'none', cursor:'pointer', display:'flex', alignItems:'center', gap:4, fontSize:'.72rem', color:'var(--ink-muted)', fontFamily:'inherit', marginLeft:'auto', marginTop:3 }}>
+                <MessageCircle size={11} strokeWidth={1.8}/>Chat
               </button>
             </div>
           </div>
         ))}
       </div>
-      <Toast toast={toast} />
+      <Toast toast={toast}/>
     </AppShell>
   );
 }

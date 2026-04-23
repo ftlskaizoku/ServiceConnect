@@ -4,81 +4,54 @@ import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
 import AppShell from '@/components/AppShell';
 import { Toast, useToast } from '@/components/Toast';
 import { TRANSACTIONS } from '@/lib/data';
-
 export default function PaymentsPage() {
-  const [payMethod, setPayMethod] = useState('wave');
-  const [amount, setAmount] = useState('');
-  const { toast, showToast } = useToast();
-
+  const [pay,setPay]=useState('wave'); const [amt,setAmt]=useState('');
+  const {toast,showToast}=useToast();
   return (
     <AppShell role="provider" title="Paiements" subtitle="Revenus et retraits">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
-        {[
-          ['Solde disponible','87 500 F','Prêt à retirer','var(--emerald)'],
-          ['Ce mois','155 000 F','+14% vs avril','var(--amber)'],
-          ['Total encaissé','1.2M F','Depuis le début','var(--sky)'],
-          ['En attente','63 000 F','Missions en cours','var(--ink-faint)'],
-        ].map(([l,v,s,c])=>(
-          <div key={l} className="card p-4 relative overflow-hidden">
-            <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background:c }} />
-            <p className="text-xs font-medium mb-2" style={{ color:'var(--ink-faint)' }}>{l}</p>
-            <p className="text-xl font-bold" style={{ fontFamily:'DM Serif Display,serif', color:c }}>{v}</p>
-            <p className="text-xs mt-0.5" style={{ color:'var(--ink-faint)' }}>{s}</p>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:10, marginBottom:16 }}>
+        {[['Solde dispo','87 500 F','#10B981'],['Ce mois','155 000 F','#F59E0B'],['Total','1.2M F','#0EA5E9'],['En attente','63 000 F','#8496B0']].map(([l,v,c])=>(
+          <div key={l} className="card" style={{ padding:14, position:'relative', overflow:'hidden' }}>
+            <div style={{ position:'absolute', bottom:0, left:0, right:0, height:3, background:c }}/>
+            <p style={{ fontSize:'.7rem', color:'var(--ink-faint)', marginBottom:4 }}>{l}</p>
+            <p style={{ fontFamily:'"DM Serif Display",Georgia,serif', fontSize:'1.1rem', color:c }}>{v}</p>
           </div>
         ))}
       </div>
-
-      {/* Withdrawal */}
-      <div className="card p-5 mb-5">
-        <h3 className="font-semibold mb-4" style={{ fontFamily:'DM Serif Display,serif' }}>Retirer des fonds</h3>
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          {[['wave','Wave','77 *** ** 67'],['om','Orange Money','77 *** ** 89']].map(([id,name,num])=>(
-            <button key={id} onClick={()=>setPayMethod(id)}
-              className="p-3 rounded-xl border text-left transition-all"
-              style={{ borderColor:payMethod===id?'var(--ink)':'var(--border)', background:payMethod===id?'var(--surface-2)':'var(--surface)' }}>
-              <div className="font-semibold text-sm mb-0.5" style={{ color:payMethod===id?'var(--ink)':'var(--ink-muted)' }}>{name}</div>
-              <div className="text-xs" style={{ color:'var(--ink-faint)' }}>{num}</div>
+      <div className="card" style={{ padding:16, marginBottom:14 }}>
+        <h3 style={{ fontFamily:'"DM Serif Display",Georgia,serif', fontSize:'.95rem', fontWeight:400, marginBottom:12 }}>Retirer des fonds</h3>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginBottom:12 }}>
+          {[['wave','Wave','77 *** 67'],['om','Orange Money','77 *** 89']].map(([id,name,num])=>(
+            <button key={id} onClick={()=>setPay(id)} style={{ padding:'10px 12px', borderRadius:10, border:`1.5px solid ${pay===id?'#0D1117':'var(--border)'}`, background:pay===id?'var(--s2)':'white', cursor:'pointer', textAlign:'left', fontFamily:'inherit' }}>
+              <div style={{ fontWeight:600, fontSize:'.84rem', color:'var(--ink)' }}>{name}</div>
+              <div style={{ fontSize:'.72rem', color:'var(--ink-faint)', marginTop:2 }}>{num}</div>
             </button>
           ))}
         </div>
-        <div className="flex gap-3">
-          <input type="number" value={amount} onChange={e=>setAmount(e.target.value)}
-            placeholder="Montant en FCFA"
-            className="flex-1 px-4 py-2.5 rounded-xl border text-sm outline-none"
-            style={{ borderColor:'var(--border)', fontFamily:'DM Sans,sans-serif' }} />
-          <button onClick={()=>{ showToast(`Retrait de ${Number(amount||0).toLocaleString('fr-FR')} F initié`); setAmount(''); }}
-            className="btn-primary px-5 py-2.5 text-sm whitespace-nowrap">
-            Retirer
-          </button>
+        <div style={{ display:'flex', gap:8 }}>
+          <input type="number" value={amt} onChange={e=>setAmt(e.target.value)} placeholder="Montant en FCFA" className="inp"/>
+          <button onClick={()=>{showToast(`Retrait de ${Number(amt||0).toLocaleString('fr-FR')} F initié`);setAmt('');}} className="btn btn-p" style={{ padding:'10px 16px', fontSize:'.84rem', flexShrink:0 }}>Retirer</button>
         </div>
       </div>
-
-      {/* History */}
-      <h3 className="font-semibold mb-3 text-sm" style={{ fontFamily:'DM Serif Display,serif' }}>Transactions récentes</h3>
-      <div className="card overflow-hidden">
+      <h3 style={{ fontFamily:'"DM Serif Display",Georgia,serif', fontSize:'.95rem', fontWeight:400, marginBottom:10 }}>Transactions récentes</h3>
+      <div className="card" style={{ overflow:'hidden' }}>
         {TRANSACTIONS.map((t,i)=>(
-          <div key={t.id} className={`flex items-center gap-3 px-4 py-3.5 ${i<TRANSACTIONS.length-1?'border-b':''}`} style={{ borderColor:'var(--border)' }}>
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-              style={{ background: t.type==='in'?'var(--emerald-dim)':'var(--rose-dim)' }}>
-              {t.type==='in'
-                ? <ArrowDownLeft size={14} strokeWidth={2.5} style={{ color:'var(--emerald)' }} />
-                : <ArrowUpRight size={14} strokeWidth={2.5} style={{ color:'var(--rose)' }} />
-              }
+          <div key={t.id} style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 16px', borderBottom:i<TRANSACTIONS.length-1?'1px solid var(--border)':'none' }}>
+            <div style={{ width:34, height:34, borderRadius:9, display:'flex', alignItems:'center', justifyContent:'center', background:t.type==='in'?'#D1FAE5':'#FFE4E6', flexShrink:0 }}>
+              {t.type==='in'?<ArrowDownLeft size={14} strokeWidth={2.5} style={{ color:'#10B981' }}/>:<ArrowUpRight size={14} strokeWidth={2.5} style={{ color:'#F43F5E' }}/>}
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-medium text-sm truncate" style={{ color:'var(--ink)' }}>{t.label}</p>
-              <p className="text-xs truncate" style={{ color:'var(--ink-faint)' }}>{t.sub}</p>
+            <div style={{ flex:1, minWidth:0 }}>
+              <p style={{ fontWeight:500, fontSize:'.84rem', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{t.label}</p>
+              <p style={{ fontSize:'.72rem', color:'var(--ink-faint)' }}>{t.sub}</p>
             </div>
-            <div className="text-right flex-shrink-0">
-              <p className="font-semibold text-sm" style={{ color:t.type==='in'?'var(--emerald)':'var(--rose)' }}>
-                {t.type==='in'?'+':'-'} {t.amount.toLocaleString('fr-FR')} F
-              </p>
-              <p className="text-xs" style={{ color:'var(--ink-faint)' }}>{t.date}</p>
+            <div style={{ textAlign:'right', flexShrink:0 }}>
+              <p style={{ fontFamily:'"DM Serif Display",Georgia,serif', fontSize:'.88rem', color:t.type==='in'?'#10B981':'#F43F5E' }}>{t.type==='in'?'+':'-'} {t.amount.toLocaleString('fr-FR')} F</p>
+              <p style={{ fontSize:'.7rem', color:'var(--ink-faint)' }}>{t.date}</p>
             </div>
           </div>
         ))}
       </div>
-      <Toast toast={toast} />
+      <Toast toast={toast}/>
     </AppShell>
   );
 }

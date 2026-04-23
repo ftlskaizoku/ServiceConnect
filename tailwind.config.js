@@ -7,8 +7,14 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['DM Sans', 'sans-serif'],
-        serif: ['DM Serif Display', 'serif'],
+        sans:  ['var(--font-dm-sans)', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-dm-serif)', 'Georgia', 'serif'],
+      },
+      colors: {
+        ink:     'var(--ink)',
+        surface: 'var(--surface)',
+        amber:   'var(--amber)',
+        emerald: 'var(--emerald)',
       },
     },
   },

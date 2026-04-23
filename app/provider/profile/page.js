@@ -1,106 +1,59 @@
 'use client';
 import { useState } from 'react';
-import { CheckCircle, Upload } from 'lucide-react';
+import { CheckCircle, Upload, LogOut } from 'lucide-react';
 import AppShell from '@/components/AppShell';
 import { Toast, useToast } from '@/components/Toast';
-
 export default function ProfilePage() {
-  const [avail, setAvail] = useState('now');
-  const { toast, showToast } = useToast();
-
-  const F = ({ label, dv, type='text', fullWidth=false }) => (
-    <div className={fullWidth ? 'col-span-2' : ''}>
-      <label className="block text-xs font-semibold mb-1" style={{ color:'var(--ink-faint)' }}>{label}</label>
-      <input type={type} defaultValue={dv}
-        className="w-full px-3 py-2.5 rounded-xl border text-sm outline-none transition-colors"
-        style={{ borderColor:'var(--border)', fontFamily:'DM Sans,sans-serif' }} />
-    </div>
-  );
-
+  const [avail,setAvail]=useState('now'); const {toast,showToast}=useToast();
   return (
-    <AppShell role="provider" title="Mon profil" subtitle="Votre profil public visible par les clients">
-      <div className="max-w-lg space-y-4">
-
-        {/* Public card preview */}
-        <div className="rounded-2xl overflow-hidden">
-          <div className="h-16 relative" style={{ background:'linear-gradient(135deg,var(--ink),var(--ink-soft))' }}>
-            <div className="absolute -bottom-7 left-5 w-14 h-14 rounded-2xl border-2 border-white flex items-center justify-center text-white font-bold text-lg"
-              style={{ background:'linear-gradient(135deg,var(--amber),#d97706)' }}>MB</div>
+    <AppShell role="provider" title="Mon profil" subtitle="Votre profil public">
+      <div style={{ maxWidth:560 }}>
+        <div style={{ borderRadius:16, overflow:'hidden', marginBottom:14 }}>
+          <div style={{ height:60, background:'linear-gradient(135deg,#0D1117,#1C2333)', position:'relative' }}>
+            <div style={{ position:'absolute', bottom:-20, left:16, width:50, height:50, borderRadius:13, border:'2.5px solid white', display:'flex', alignItems:'center', justifyContent:'center', background:'linear-gradient(135deg,#F59E0B,#d97706)', color:'#0D1117', fontWeight:700, fontSize:'1rem' }}>MB</div>
           </div>
-          <div className="bg-white px-5 pt-10 pb-5 border border-t-0 rounded-b-2xl" style={{ borderColor:'var(--border)' }}>
-            <div className="flex items-start justify-between">
-              <div>
-                <h3 className="font-semibold text-base" style={{ fontFamily:'DM Serif Display,serif' }}>Moussa Badiane</h3>
-                <p className="text-sm" style={{ color:'var(--ink-muted)' }}>Électricien BT/MT · Dakar</p>
-              </div>
-              <div className="text-right">
-                <div className="font-bold text-base" style={{ fontFamily:'DM Serif Display,serif' }}>⭐ 4.8</div>
-                <div className="text-xs" style={{ color:'var(--ink-faint)' }}>87 missions</div>
-              </div>
+          <div className="card" style={{ borderRadius:'0 0 16px 16px', borderTop:'none', padding:'28px 16px 16px' }}>
+            <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between' }}>
+              <div><h3 style={{ fontFamily:'"DM Serif Display",Georgia,serif', fontSize:'1.05rem', fontWeight:400 }}>Moussa Badiane</h3><p style={{ fontSize:'.8rem', color:'var(--ink-muted)' }}>Électricien BT/MT · Dakar</p></div>
+              <div style={{ textAlign:'right' }}><div style={{ fontFamily:'"DM Serif Display",Georgia,serif', fontSize:'.95rem' }}>⭐ 4.8</div><div style={{ fontSize:'.7rem', color:'var(--ink-faint)' }}>87 missions</div></div>
             </div>
           </div>
         </div>
-
-        {/* Basic info */}
-        <div className="card p-5">
-          <h4 className="font-semibold mb-4 text-sm" style={{ fontFamily:'DM Serif Display,serif' }}>Informations</h4>
-          <div className="grid grid-cols-2 gap-3 mb-3">
-            <F label="Prénom" dv="Moussa" />
-            <F label="Nom" dv="Badiane" />
-            <F label="Téléphone" dv="+221 76 456 78 90" />
-            <F label="Zone d'intervention" dv="Dakar & banlieue" />
+        <div className="card" style={{ padding:16, marginBottom:14 }}>
+          <h3 style={{ fontFamily:'"DM Serif Display",Georgia,serif', fontSize:'.95rem', fontWeight:400, marginBottom:12 }}>Informations</h3>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:10 }}>
+            {[['Prénom','Moussa'],['Nom','Badiane'],['Téléphone','+221 76 456 78 90'],['Zone','Dakar & banlieue']].map(([l,v])=>(
+              <div key={l}><label style={{ display:'block', fontSize:'.72rem', fontWeight:600, color:'var(--ink-faint)', marginBottom:5, textTransform:'uppercase', letterSpacing:'.05em' }}>{l}</label><input defaultValue={v} className="inp"/></div>
+            ))}
           </div>
-          <div>
-            <label className="block text-xs font-semibold mb-1" style={{ color:'var(--ink-faint)' }}>Bio</label>
-            <textarea rows={3} defaultValue="Électricien diplômé avec 8 ans d'expérience. Spécialiste BT/MT. Certifié SENELEC. Intervention 7j/7."
-              className="w-full px-3 py-2.5 rounded-xl border text-sm outline-none resize-none"
-              style={{ borderColor:'var(--border)', fontFamily:'DM Sans,sans-serif' }} />
+          <div style={{ marginBottom:10 }}>
+            <label style={{ display:'block', fontSize:'.72rem', fontWeight:600, color:'var(--ink-faint)', marginBottom:5, textTransform:'uppercase', letterSpacing:'.05em' }}>Bio</label>
+            <textarea defaultValue="Électricien diplômé. Spécialiste BT/MT. Certifié SENELEC. Intervention 7j/7." rows={3} className="inp" style={{ resize:'none' }}/>
           </div>
-        </div>
-
-        {/* Tarifs */}
-        <div className="card p-5">
-          <h4 className="font-semibold mb-4 text-sm" style={{ fontFamily:'DM Serif Display,serif' }}>Tarifs & Disponibilité</h4>
-          <div className="grid grid-cols-2 gap-3">
-            <F label="Tarif journalier (FCFA)" dv="20000" type="number" />
-            <div>
-              <label className="block text-xs font-semibold mb-1" style={{ color:'var(--ink-faint)' }}>Disponibilité</label>
-              <select value={avail} onChange={e=>setAvail(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl border text-sm outline-none"
-                style={{ borderColor:'var(--border)', fontFamily:'DM Sans,sans-serif', background:'white' }}>
-                <option value="now">Disponible maintenant</option>
-                <option value="today">Aujourd'hui</option>
-                <option value="week">Cette semaine</option>
-                <option value="unavailable">Indisponible</option>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+            <div><label style={{ display:'block', fontSize:'.72rem', fontWeight:600, color:'var(--ink-faint)', marginBottom:5, textTransform:'uppercase', letterSpacing:'.05em' }}>Tarif (FCFA/j)</label><input type="number" defaultValue="20000" className="inp"/></div>
+            <div><label style={{ display:'block', fontSize:'.72rem', fontWeight:600, color:'var(--ink-faint)', marginBottom:5, textTransform:'uppercase', letterSpacing:'.05em' }}>Disponibilité</label>
+              <select value={avail} onChange={e=>setAvail(e.target.value)} className="inp" style={{ appearance:'auto' }}>
+                <option value="now">Disponible maintenant</option><option value="today">Aujourd'hui</option><option value="week">Cette semaine</option><option value="unavailable">Indisponible</option>
               </select>
             </div>
           </div>
         </div>
-
-        {/* Documents */}
-        <div className="card p-5">
-          <h4 className="font-semibold mb-4 text-sm" style={{ fontFamily:'DM Serif Display,serif' }}>Documents & Certifications</h4>
-          <div className="space-y-2">
-            {[['Certificat SENELEC',true],["Pièce d'identité (CNI)",true],['Assurance RC',false]].map(([name,ok])=>(
-              <div key={name} className="flex items-center justify-between p-3 rounded-xl border" style={{ background:'var(--surface-2)', borderColor:'var(--border)' }}>
-                <span className="text-sm font-medium" style={{ color:'var(--ink)' }}>{name}</span>
-                {ok
-                  ? <span className="badge badge-green flex items-center gap-1"><CheckCircle size={10} strokeWidth={2.5}/>Vérifié</span>
-                  : <button onClick={()=>showToast('Document uploadé')} className="flex items-center gap-1.5 text-xs font-semibold" style={{ color:'var(--ink-muted)' }}>
-                      <Upload size={12} strokeWidth={2} /> Ajouter
-                    </button>
-                }
-              </div>
-            ))}
-          </div>
+        <div className="card" style={{ padding:16, marginBottom:14 }}>
+          <h3 style={{ fontFamily:'"DM Serif Display",Georgia,serif', fontSize:'.95rem', fontWeight:400, marginBottom:12 }}>Documents</h3>
+          {[['Certificat SENELEC',true],["Pièce d'identité",true],['Assurance RC',false]].map(([n,ok])=>(
+            <div key={n} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'10px 12px', borderRadius:9, border:'1px solid var(--border)', background:'var(--s2)', marginBottom:6 }}>
+              <span style={{ fontSize:'.84rem', fontWeight:500 }}>{n}</span>
+              {ok?<span className="badge bg"><CheckCircle size={10} strokeWidth={2.5}/>Vérifié</span>:<button onClick={()=>showToast('Document uploadé')} style={{ display:'flex', alignItems:'center', gap:5, fontSize:'.76rem', fontWeight:600, color:'var(--ink-muted)', background:'none', border:'none', cursor:'pointer', fontFamily:'inherit' }}><Upload size={12} strokeWidth={2}/>Ajouter</button>}
+            </div>
+          ))}
         </div>
-
-        <div className="space-y-2 pb-4">
-          <button onClick={()=>showToast('Profil mis à jour et publié')} className="btn-primary w-full py-3 text-sm">Enregistrer et publier</button>
-          <button onClick={()=>showToast('Déconnexion…')} className="btn-secondary w-full py-3 text-sm" style={{ color:'var(--rose)', borderColor:'var(--rose-dim)' }}>Se déconnecter</button>
+        <div style={{ display:'flex', flexDirection:'column', gap:8, paddingBottom:20 }}>
+          <button onClick={()=>showToast('Profil publié')} className="btn btn-p" style={{ padding:12, fontSize:'.88rem', justifyContent:'center' }}>Enregistrer et publier</button>
+          <button onClick={()=>showToast('Déconnexion…')} style={{ padding:12, borderRadius:9, border:'1.5px solid #fecdd3', background:'#FFF0F0', color:'#F43F5E', cursor:'pointer', fontSize:'.86rem', fontWeight:600, display:'flex', alignItems:'center', justifyContent:'center', gap:6, fontFamily:'inherit' }}><LogOut size={14} strokeWidth={1.8}/>Se déconnecter</button>
         </div>
       </div>
-      <Toast toast={toast} />
+      <Toast toast={toast}/>
     </AppShell>
   );
 }
